@@ -1,13 +1,13 @@
 // Дана функция ParseCitySubjson, обрабатывающая JSON-объект со списком городов конкретной страны:
-void ParseCitySubjson(vector<City>& cities, const Json& country_json, const vector<Language>& languages) {
+void ParseCitySubjson(vector<City>& cities, const Json& cities_json, const Country& country) {
     for (const auto& city_json : country_json.AsList()) {
         const auto& city_obj = city_json.AsObject();
         cities.push_back({ country_json["name"s].AsString(), city_obj["iso_code"s].AsString()
-            , country_json.AsObject().country_obj["phone_code"s].AsString() + city_obj["phone_code"s].AsString()
-            , country_json.AsObject().country_obj["name"s].AsString() 
-            , country_json.AsObject().country_obj["iso_code"s].AsString()
-            , country_json.AsObject().country_obj["time_zone"s].AsString()
-            , languages });
+            , country.phone_code + city_obj["phone_code"s].AsString()
+            , country.name 
+            , country.iso_code
+            , country.time_zone
+            , country.languages });
     }
 }
 
@@ -25,6 +25,6 @@ void ParseCountryJson(vector<Country>& countries, vector<City>& cities, const Js
         for (const auto& lang_obj : country_obj["languages"s].AsList()) {
             country.languages.push_back(FromString<Language>(lang_obj.AsString()));
         }
-        ParseCitySubjson(cities, country_obj["cities"s], country.languages);
+        ParseCitySubjson(cities, country_obj["cities"s], country);
     }
 }
